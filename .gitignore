@@ -90,3 +90,5 @@ crashlytics-build.properties
 fabric.properties
 
 
+# Custom
+token.xml
