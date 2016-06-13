@@ -1,7 +1,9 @@
 package com.example.weatherrouting;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity
 
     private MapView mapView;
     private AutoCompleteTextView autoCompleteTextView;
+    private FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -80,6 +83,17 @@ public class MainActivity extends AppCompatActivity
                     autoCompleteTextView.setText("");
                 }
                 return false;
+            }
+        });
+
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab_navigation);
+        floatingActionButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent routeConfigurationIntent = new Intent(getApplicationContext(), RouteConfigurationActivity.class);
+                startActivity(routeConfigurationIntent);
             }
         });
     }
