@@ -102,7 +102,6 @@ public class GeocoderAdapter extends BaseAdapter implements Filterable
             MapboxGeocoder client = new MapboxGeocoder.Builder()
                     .setAccessToken(context.getResources().getString(R.string.access_token))
                     .setLocation(constraint.toString())
-                    .setType(GeocoderCriteria.TYPE_ADDRESS)
                     .build();
 
             Response<GeocoderResponse> response;

@@ -23,7 +23,12 @@
 
         <service android:name="com.mapbox.mapboxsdk.telemetry.TelemetryService" />
 
-        <activity android:name=".RouteConfigurationActivity"></activity>
+        <activity android:name=".RouteConfigurationActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.weatherrouting.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

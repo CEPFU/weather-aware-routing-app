@@ -30,4 +30,5 @@ dependencies {
     compile('com.mapbox.mapboxsdk:mapbox-android-geocoder:1.0.0@aar') {
         transitive = true
     }
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 }

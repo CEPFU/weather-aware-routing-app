@@ -1,11 +1,14 @@
 package com.example.weatherrouting;
 
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -58,7 +61,7 @@ public class MainActivity extends AppCompatActivity
                 // hide keyboard
                 InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 manager.hideSoftInputFromInputMethod(view.getWindowToken(), 0);
-                placeMarkerAndFlyThere(feature.getLatitude(), feature.getLongitude());
+                placeMarkerAndFlyThere(feature);
             }
         });
         // Make view clearable
@@ -98,20 +101,19 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    private void placeMarkerAndFlyThere(final double latitude, final double longitude)
+    private void placeMarkerAndFlyThere(final GeocoderFeature feature)
     {
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
                 mapboxMap.clear();
                 mapboxMap.addMarker(new MarkerOptions()
-                .title("Foo")
-                .snippet("BAR")
-                .position(new LatLng(latitude, longitude)));
+                .title(feature.getText())
+                .position(new LatLng(feature.getLatitude(), feature.getLongitude())));
 
                 // Fly to new position
                 CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(new LatLng(latitude, longitude))
+                        .target(new LatLng(feature.getLatitude(), feature.getLongitude()))
                         .zoom(13)
                         .build();
                 mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 5000, null);

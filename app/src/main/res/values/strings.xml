@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Weather Routing</string>
+    <string name="search_from_text">From</string>
+    <string name="search_to_text">To</string>
 </resources>
