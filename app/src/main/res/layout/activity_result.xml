@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.weatherrouting.ResultActivity">
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_notification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_notification_tap_and_play" />
+
+    <com.mapbox.mapboxsdk.maps.MapView
+        android:id="@+id/resultmapview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        mapbox:access_token="@string/access_token" />
+</android.support.design.widget.CoordinatorLayout>

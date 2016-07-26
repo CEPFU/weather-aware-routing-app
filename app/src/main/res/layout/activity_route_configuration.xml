@@ -10,19 +10,78 @@
               android:paddingTop="@dimen/activity_vertical_margin"
               tools:context="com.example.weatherrouting.RouteConfigurationActivity">
 
-    <AutoCompleteTextView
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Von"/>
+    <com.mapbox.services.android.geocoder.ui.GeocoderAutoCompleteView
         android:id="@+id/search_from"
+        android:singleLine="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <AutoCompleteTextView
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nach"/>
+    <com.mapbox.services.android.geocoder.ui.GeocoderAutoCompleteView
         android:id="@+id/search_to"
+        android:singleLine="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Daten auswählen"/>
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/spinner_value_type"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+        <Spinner
+            android:id="@+id/spinner_value_bound"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+        <EditText
+            android:id="@+id/edit_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:layout_weight="1"/>
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kantenoptionen"/>
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/radio_group"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton android:id="@+id/radio_block"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Blockieren"/>
+        <RadioButton android:id="@+id/radio_avoid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vermeiden"/>
+    </RadioGroup>
 
     <Button
         android:id="@+id/route_calculate_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:text="@string/search_go"/>
 </LinearLayout>

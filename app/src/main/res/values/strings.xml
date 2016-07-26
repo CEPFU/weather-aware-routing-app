@@ -2,4 +2,22 @@
     <string name="app_name">Weather Routing</string>
     <string name="search_from_text">From</string>
     <string name="search_to_text">To</string>
+    <string name="search_go">Berechnen</string>
+    <string-array name="search_weather_values">
+        <item>Temperatur</item>
+        <item>Höchste Temperatur</item>
+        <item>Niedrigste Temperatur</item>
+        <item>Gefühlte Temperatur</item>
+        <item>Niederschlagsmenge</item>
+        <item>Maximale Windgechwindigkeit</item>
+        <item>Bewölkung</item>
+        <item>Luftfeuchtigkeit</item>
+        <item>Luftdruck</item>
+        <item>Sonnenscheindauer</item>
+        <item>Schneehöhe</item>
+    </string-array>
+    <string-array name="search_value_bound">
+        <item>mindestens</item>
+        <item>höchstens</item>
+    </string-array>
 </resources>
