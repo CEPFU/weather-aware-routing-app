@@ -78,6 +78,30 @@
             android:text="Vermeiden"/>
     </RadioGroup>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Startzeitpunkt wählen"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Datum wählen"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Uhrzeit"
+            />
+
+    </LinearLayout>
+
     <Button
         android:id="@+id/route_calculate_button"
         android:layout_width="wrap_content"
