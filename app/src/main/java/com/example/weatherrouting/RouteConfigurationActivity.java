@@ -257,7 +257,7 @@ public class RouteConfigurationActivity extends AppCompatActivity implements Dow
                 urlBuilder.append("&user_value=").append(value);
                 urlBuilder.append("&user_value_type=").append(valueType);
                 urlBuilder.append("&user_value_bound=").append(valueBound);
-                urlBuilder.append("&user_value_block=").append(valueBlock);
+                urlBuilder.append("&user_blocking_mode=").append(valueBlock);
                 urlBuilder.append("&user_time=").append(valueTime / 1000);
 //                urlBuilder.append("&user_time=").append(System.currentTimeMillis() / 1000);
 
