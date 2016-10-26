@@ -1,5 +1,7 @@
 package com.example.weatherrouting;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,16 +11,21 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.mapbox.services.android.geocoder.ui.GeocoderAutoCompleteView;
 import com.mapbox.services.commons.models.Position;
 import com.mapbox.services.geocoding.v5.GeocodingCriteria;
 import com.mapbox.services.geocoding.v5.models.CarmenFeature;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -26,10 +33,18 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class RouteConfigurationActivity extends AppCompatActivity implements DownloadCompleteListener
+public class RouteConfigurationActivity extends AppCompatActivity implements DownloadCompleteListener, View.OnClickListener
 {
     private GeocoderAutoCompleteView fromView;
     private GeocoderAutoCompleteView toView;
+
+    private Button dateButton;
+    private Button timeButton;
+
+    private AVLoadingIndicatorView loadingView;
+
+    private DatePickerDialog datePickerDialog;
+    private TimePickerDialog timePickerDialog;
 
     private Position fromPosition;
     private Position toPosition;
@@ -37,12 +52,16 @@ public class RouteConfigurationActivity extends AppCompatActivity implements Dow
     private String valueBound;
     private double value;
     private String valueBlock;
+    private long valueTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_configuration);
+
+        loadingView = (AVLoadingIndicatorView) findViewById(R.id.loading_spinner);
+        loadingView.setVisibility(View.INVISIBLE);
 
         fromView = (GeocoderAutoCompleteView) findViewById(R.id.search_from);
         fromView.setAccessToken(getResources().getString(R.string.access_token));
@@ -160,13 +179,13 @@ public class RouteConfigurationActivity extends AppCompatActivity implements Dow
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after)
             {
-
+                // Nothing to do
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count)
             {
-
+                // Nothing to do
             }
 
             @Override
@@ -194,30 +213,55 @@ public class RouteConfigurationActivity extends AppCompatActivity implements Dow
             }
         });
 
+        dateButton = (Button) findViewById(R.id.choose_date);
+        dateButton.setOnClickListener(this);
+        timeButton = (Button) findViewById(R.id.choose_time);
+        timeButton.setOnClickListener(this);
+
+        Calendar newCalendar = Calendar.getInstance();
+        datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                valueTime = newDate.getTimeInMillis();
+            }
+        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+
+        timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                Calendar newTime = Calendar.getInstance();
+                newTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                newTime.set(Calendar.MINUTE, minute);
+                valueTime += hourOfDay * 3600 * 1000;
+                valueTime += minute * 60 * 1000;
+            }
+        }, newCalendar.get(Calendar.HOUR_OF_DAY), newCalendar.get(Calendar.MINUTE), true);
+
         Button calcButton = (Button) findViewById(R.id.route_calculate_button);
         assert calcButton != null;
         calcButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
-//                StringBuilder urlBuilder = new StringBuilder();
-//                urlBuilder.append("http://server:port/route");
-//                urlBuilder.append("?point").append(fromPosition.getLatitude()).append(",").append(fromPosition.getLongitude());
-//                urlBuilder.append("&point").append(toPosition.getLatitude()).append(",").append(toPosition.getLongitude());
-//                urlBuilder.append("&type=json&vehicle=car&locale=de-DE");
-//                urlBuilder.append("&weighting=probabilistic");
-//                urlBuilder.append("&elevation=false&ch.disable=true");
-//                urlBuilder.append("&algorithm=astar");
-//                urlBuilder.append("&user_value=").append(value);
-//                urlBuilder.append("&user_value_type=").append(valueType);
-//                urlBuilder.append("&user_value_bound").append(valueBound);
-//                urlBuilder.append("&user_value_block").append(valueBlock);
+                StringBuilder urlBuilder = new StringBuilder();
+                urlBuilder.append("http://160.45.11.63:8989/route");
+                urlBuilder.append("?point=").append(fromPosition.getLatitude()).append(",").append(fromPosition.getLongitude());
+                urlBuilder.append("&point=").append(toPosition.getLatitude()).append(",").append(toPosition.getLongitude());
+                urlBuilder.append("&type=json&vehicle=car&locale=de-DE");
+                urlBuilder.append("&points_encoded=false");
+                urlBuilder.append("&weighting=probabilistic");
+                urlBuilder.append("&elevation=false&ch.disable=true");
+                urlBuilder.append("&algorithm=astar");
+                urlBuilder.append("&user_value=").append(value);
+                urlBuilder.append("&user_value_type=").append(valueType);
+                urlBuilder.append("&user_value_bound=").append(valueBound);
+                urlBuilder.append("&user_value_block=").append(valueBlock);
+                urlBuilder.append("&user_time=").append(valueTime / 1000);
 //                urlBuilder.append("&user_time=").append(System.currentTimeMillis() / 1000);
-//
-//                makeRequest(urlBuilder.toString());
 
-                Intent intent = new Intent(getApplicationContext(), ResultActivity.class);
-                startActivity(intent);
+                makeRequest(urlBuilder.toString());
             }
         });
     }
@@ -225,11 +269,17 @@ public class RouteConfigurationActivity extends AppCompatActivity implements Dow
     @Override
     public void downloadComplete(String json)
     {
+        loadingView.setVisibility(View.GONE);
 
+        Intent intent = new Intent(getApplicationContext(), ResultActivity.class);
+        intent.putExtra(ResultActivity.JSON_EXTRA, json);
+        startActivity(intent);
     }
 
     private void makeRequest(String url)
     {
+        loadingView.setVisibility(View.VISIBLE);
+
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(url).build();
 
@@ -255,11 +305,24 @@ public class RouteConfigurationActivity extends AppCompatActivity implements Dow
                         }
                         catch (Exception e)
                         {
-                            e.printStackTrace();
+//                            e.printStackTrace();
+                            loadingView.setVisibility(View.GONE);
+                            Toast.makeText(getApplicationContext(), "Da ist etwas schiefgegangen...", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == dateButton)
+        {
+            datePickerDialog.show();
+        } else if (v == timeButton)
+        {
+            timePickerDialog.show();
+        }
     }
 }

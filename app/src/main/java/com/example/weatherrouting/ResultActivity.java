@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -29,15 +30,20 @@ import java.util.List;
 
 public class ResultActivity extends AppCompatActivity implements OnMapReadyCallback
 {
+    public static final String JSON_EXTRA = "com.example.weatherrouting.JSON_EXTRA";
     private static final String LOG_TAG = "ResultActivity";
 
     private MapView mapView;
     private MapboxMap mapboxMap;
 
+    private String jsonString;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
+
+        jsonString = getIntent().getStringExtra(JSON_EXTRA);
 
         mapView = (MapView) findViewById(R.id.resultmapview);
         mapView.setStyleUrl("mapbox://styles/mapbox/light-v9");
@@ -50,9 +56,17 @@ public class ResultActivity extends AppCompatActivity implements OnMapReadyCallb
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ResultDetailActivity.class);
+                intent.putExtra(ResultDetailActivity.JSON_EXTRA, jsonString);
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState)
+    {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putString(JSON_EXTRA, jsonString);
     }
 
     @Override
@@ -60,7 +74,7 @@ public class ResultActivity extends AppCompatActivity implements OnMapReadyCallb
     {
         this.mapboxMap = mapboxMap;
 
-        new DrawGeoJSON().execute();
+        new DrawGeoJSON(jsonString).execute();
     }
 
     @Override
@@ -100,6 +114,13 @@ public class ResultActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private class DrawGeoJSON extends AsyncTask<Void, Void, List<LatLng>>
     {
+        private String json;
+
+        DrawGeoJSON(String json)
+        {
+            this.json = json;
+        }
+
         @Override
         protected List<LatLng> doInBackground(Void... params)
         {
@@ -107,18 +128,18 @@ public class ResultActivity extends AppCompatActivity implements OnMapReadyCallb
 
             try
             {
-                InputStream inputStream = getAssets().open("route.json");
-                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
-                StringBuilder builder = new StringBuilder();
-                int cp;
-                while ((cp = reader.read()) != -1)
-                {
-                    builder.append((char) cp);
-                }
+//                InputStream inputStream = getAssets().open("route.json");
+//                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
+//                StringBuilder builder = new StringBuilder();
+//                int cp;
+//                while ((cp = reader.read()) != -1)
+//                {
+//                    builder.append((char) cp);
+//                }
+//
+//                inputStream.close();
 
-                inputStream.close();
-
-                JSONObject json = new JSONObject(builder.toString());
+                JSONObject json = new JSONObject(this.json);
                 JSONArray paths = json.getJSONArray("paths");
                 JSONObject path = paths.getJSONObject(0);
                 JSONObject jsonPoints = path.getJSONObject("points");

@@ -17,7 +17,11 @@ import java.util.List;
 
 public class ResultDetailActivity extends AppCompatActivity
 {
+    public static final String JSON_EXTRA = "com.example.weatherrouting.JSON_EXTRA";
+
     private ListView listView;
+
+    private String jsonString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -25,21 +29,23 @@ public class ResultDetailActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result_detail);
 
+        jsonString = getIntent().getStringExtra(JSON_EXTRA);
+
         listView = (ListView) findViewById(R.id.instruction_list_view);
         List<String> instructionList = new ArrayList<>();
         try
         {
-            InputStream inputStream = getAssets().open("route.json");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
-            StringBuilder builder = new StringBuilder();
-            int cp;
-            while ((cp = reader.read()) != -1) {
-                builder.append((char) cp);
-            }
+//            InputStream inputStream = getAssets().open("route.json");
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
+//            StringBuilder builder = new StringBuilder();
+//            int cp;
+//            while ((cp = reader.read()) != -1) {
+//                builder.append((char) cp);
+//            }
+//
+//            inputStream.close();
 
-            inputStream.close();
-
-            JSONObject json = new JSONObject(builder.toString());
+            JSONObject json = new JSONObject(jsonString);
             JSONArray paths = json.getJSONArray("paths");
             JSONObject path = paths.getJSONObject(0);
             JSONArray instructions = path.getJSONArray("instructions");
