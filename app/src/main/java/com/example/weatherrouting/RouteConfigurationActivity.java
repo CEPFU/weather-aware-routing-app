@@ -157,10 +157,10 @@ public class RouteConfigurationActivity extends AppCompatActivity implements Dow
                 switch (position)
                 {
                     case 0:
-                        valueBound = "lower";
+                        valueBound = "upper";
                         break;
                     case 1:
-                        valueBound = "upper";
+                        valueBound = "lower";
                         break;
                 }
             }
